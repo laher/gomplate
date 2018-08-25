@@ -33,9 +33,12 @@ func parseVaultParams(sourceURL *url.URL, args []string) (params map[string]inte
 	return params, p, nil
 }
 
-func readVault(source *Source, args ...string) ([]byte, error) {
+func readVault(source *Source, args ...string) (data []byte, err error) {
 	if source.vc == nil {
-		source.vc = vault.New(source.URL)
+		source.vc, err = vault.New(source.URL)
+		if err != nil {
+			return nil, err
+		}
 		source.vc.Login()
 	}
 
@@ -43,8 +46,6 @@ func readVault(source *Source, args ...string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	var data []byte
 
 	source.mediaType = jsonMimetype
 	if len(params) > 0 {

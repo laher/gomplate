@@ -31,8 +31,8 @@ func TestTag_MissingKey(t *testing.T) {
 		cache:      make(map[string]interface{}),
 	}
 
-	assert.Empty(t, e.Tag("missing"))
-	assert.Equal(t, "default", e.Tag("missing", "default"))
+	assert.Empty(t, must(e.Tag("missing")))
+	assert.Equal(t, "default", must(e.Tag("missing", "default")))
 }
 
 func TestTag_ValidKey(t *testing.T) {
@@ -58,8 +58,8 @@ func TestTag_ValidKey(t *testing.T) {
 		cache:      make(map[string]interface{}),
 	}
 
-	assert.Equal(t, "bar", e.Tag("foo"))
-	assert.Equal(t, "bar", e.Tag("foo", "default"))
+	assert.Equal(t, "bar", must(e.Tag("foo")))
+	assert.Equal(t, "bar", must(e.Tag("foo", "default")))
 }
 
 func TestTag_NonEC2(t *testing.T) {
@@ -75,8 +75,8 @@ func TestTag_NonEC2(t *testing.T) {
 		cache:      make(map[string]interface{}),
 	}
 
-	assert.Equal(t, "", e.Tag("foo"))
-	assert.Equal(t, "default", e.Tag("foo", "default"))
+	assert.Equal(t, "", must(e.Tag("foo")))
+	assert.Equal(t, "default", must(e.Tag("foo", "default")))
 }
 
 func TestNewEc2Info(t *testing.T) {
@@ -100,6 +100,6 @@ func TestNewEc2Info(t *testing.T) {
 	}
 	e.metaClient = ec2meta
 
-	assert.Equal(t, "bar", e.Tag("foo"))
-	assert.Equal(t, "bar", e.Tag("foo", "default"))
+	assert.Equal(t, "bar", must(e.Tag("foo")))
+	assert.Equal(t, "bar", must(e.Tag("foo", "default")))
 }

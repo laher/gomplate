@@ -62,3 +62,10 @@ func (d DummyInstanceDescriber) DescribeInstances(*ec2.DescribeInstancesInput) (
 	}
 	return output, nil
 }
+
+func must(r interface{}, err error) interface{} {
+	if err != nil {
+		panic(err)
+	}
+	return r
+}

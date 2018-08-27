@@ -57,7 +57,8 @@ func GetClientOptions() ClientOptions {
 }
 
 // SDKSession -
-func SDKSession() *session.Session {
+func SDKSession() (*session.Session, error) {
+	var err error
 	sdkSessionInit.Do(func() {
 		options := GetClientOptions()
 		timeout := options.Timeout
@@ -70,9 +71,10 @@ func SDKSession() *session.Session {
 
 		// Waiting for https://github.com/aws/aws-sdk-go/issues/1103
 		metaClient := NewEc2Meta(options)
-		metaRegion, err := metaClient.Region()
+		var metaRegion string
+		metaRegion, err = metaClient.Region()
 		if err != nil {
-
+			return
 		}
 		_, default1 := os.LookupEnv("AWS_REGION")
 		_, default2 := os.LookupEnv("AWS_DEFAULT_REGION")
@@ -85,16 +87,17 @@ func SDKSession() *session.Session {
 			SharedConfigState: session.SharedConfigEnable,
 		}))
 	})
-	return sdkSession
+	return sdkSession, err
 }
 
 // NewEc2Info -
-func NewEc2Info(options ClientOptions) *Ec2Info {
+func NewEc2Info(options ClientOptions) (info *Ec2Info) {
 	metaClient := NewEc2Meta(options)
 	return &Ec2Info{
 		describer: func() InstanceDescriber {
 			if describerClient == nil {
-				describerClient = ec2.New(SDKSession())
+				session, err := SDKSession()
+				describerClient = ec2.New(session)
 			}
 			return describerClient
 		},

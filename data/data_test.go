@@ -273,7 +273,7 @@ data = [ ["gamma", "delta"], [1, 2] ] # just an update to make sure parsers supp
 # Line breaks are OK when inside arrays
 hosts = [
   "alpha",
-  "omega" 
+  "omega"
 ]
 `
 	expected := map[string]interface{}{
